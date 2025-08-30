@@ -224,7 +224,7 @@ export const projects = {
 				/* Get all fields from the projects table and alias it as 'project' */
 				.select(
 					`
-          project:projects (*) 
+          project:projects!inner (*) 
         `
 				)
 				.eq('user_id', userId)

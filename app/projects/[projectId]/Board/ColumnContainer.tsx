@@ -201,46 +201,48 @@ export const ColumnContainer = ({
 			</SortableContext>
 
 			{/* Add Task Section */}
-			<div className='p-2 dark:border-gray-800'>
-				{showInput ? (
-					<div className='flex gap-2'>
-						<Input
-							value={inputValue}
-							onChange={e => setInputValue(e.target.value)}
-							onKeyDown={handleKeyDown}
-							placeholder='Enter task title...'
-							className='h-8'
-							autoFocus
-							disabled={isCreating}
-						/>
+			{can?.(ProjectAction.CREATE_TASKS) && (
+				<div className='p-2 dark:border-gray-800'>
+					{showInput ? (
+						<div className='flex gap-2'>
+							<Input
+								value={inputValue}
+								onChange={e => setInputValue(e.target.value)}
+								onKeyDown={handleKeyDown}
+								placeholder='Enter task title...'
+								className='h-8'
+								autoFocus
+								disabled={isCreating}
+							/>
+							<Button
+								onClick={handleAddItem}
+								className={cn(successBtnStyles, 'h-8 px-3')}
+								disabled={!inputValue.trim() || isCreating}
+							>
+								{isCreating ? 'Adding...' : 'Add'}
+							</Button>
+							<Button
+								onClick={() => {
+									setShowInput(false)
+									setInputValue('')
+								}}
+								variant='ghost'
+								className='h-8 w-8 p-0'
+								disabled={isCreating}
+							>
+								<X className='h-4 w-4' />
+							</Button>
+						</div>
+					) : (
 						<Button
-							onClick={handleAddItem}
-							className={cn(successBtnStyles, 'h-8 px-3')}
-							disabled={!inputValue.trim() || isCreating}
+							onClick={() => setShowInput(true)}
+							className='w-full h-8 bg-transparent text-gray-500 hover:bg-gray-200 hover:dark:bg-gray-900 dark:text-gray-400 flex justify-start'
 						>
-							{isCreating ? 'Adding...' : 'Add'}
+							<Plus className='w-4 h-4 mr-2' /> Add item
 						</Button>
-						<Button
-							onClick={() => {
-								setShowInput(false)
-								setInputValue('')
-							}}
-							variant='ghost'
-							className='h-8 w-8 p-0'
-							disabled={isCreating}
-						>
-							<X className='h-4 w-4' />
-						</Button>
-					</div>
-				) : (
-					<Button
-						onClick={() => setShowInput(true)}
-						className='w-full h-8 bg-transparent text-gray-500 hover:bg-gray-200 hover:dark:bg-gray-900 dark:text-gray-400 flex justify-start'
-					>
-						<Plus className='w-4 h-4 mr-2' /> Add item
-					</Button>
-				)}
-			</div>
+					)}
+				</div>
+			)}
 		</div>
 	)
 }
