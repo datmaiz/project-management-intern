@@ -1,10 +1,12 @@
+import { createClient } from './supabase/client'
 import { getSupabase } from './supabase/supabase'
+
+const supabase = createClient()
 
 export const projects = {
 	// Project management
 	management: {
 		create: async (projectData: ProjectWithOptions, userId: string) => {
-			const supabase = await getSupabase()
 			try {
 				// 1. Create the project first
 				const { data: project, error: projectError } = await supabase

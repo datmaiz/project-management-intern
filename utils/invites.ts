@@ -10,10 +10,10 @@ export interface InviteToken {
 	created_at: string
 }
 
+const supabase = createClient()
+
 export const inviteUtils = {
 	async createInviteLink(projectId: string, role: Role, invitedBy: string): Promise<string> {
-		const supabase = createClient()
-
 		// Create a unique token
 		const token = crypto.randomUUID()
 

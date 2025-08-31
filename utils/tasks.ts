@@ -28,7 +28,7 @@ export const tasks = {
 			const { data, error } = await supabase.rpc('get_project_board', { p_project_id: projectId })
 			if (error) throw error
 			// data là jsonb[] → ép kiểu
-			return (data ?? []) as unknown as BoardRow[]
+			return data
 		},
 
 		updatePosition: async (taskId: string, statusPosition: number) => {
@@ -42,7 +42,7 @@ export const tasks = {
 				.eq('id', taskId)
 
 			if (error) throw error
-			return data as ITask
+			return data
 		},
 
 		moveTask: async (taskId: string, statusId: string, statusPosition: number) => {

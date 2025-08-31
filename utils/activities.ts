@@ -1,9 +1,11 @@
+import { createClient } from './supabase/client'
 import { getSupabase } from './supabase/supabase'
+
+const supabase = createClient()
 
 export const activities = {
 	// Get all activities for a task
 	getTaskActivities: async (taskId: string) => {
-		const supabase = await getSupabase()
 		const { data, error } = await supabase
 			.from('activities')
 			.select(

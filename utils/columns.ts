@@ -1,44 +1,50 @@
+import { createClient } from './supabase/client'
 import { getSupabase } from './supabase/supabase'
+
+const supabase = createClient()
 
 export const columns = {
 	async updateLimit(columnId: string, limit: number) {
-		const supabase = await getSupabase()
 		const { data, error } = await supabase.from('statuses').update({ limit }).eq('id', columnId).select().maybeSingle()
 
 		if (error) throw error
 		return data
 	},
 
-	async updateDetails(columnId: string, updates: Partial<ICustomFieldData>) {
-		const supabase = await getSupabase()
-		const { data, error } = await supabase.from('statuses').update(updates).eq('id', columnId).select().single()
+	async createColumn(projectId: string, columnData: Omit<ICustomFieldData, 'id'>) {
+		const { data, error } = await supabase
+			.from('statuses')
+			.insert({
+				...columnData,
+				project_id: projectId,
+				updated_at: new Date(),
+			})
+			.select()
+			.single()
+
+		if (error) throw error
+		return data
+	},
+
+	async updateDetails(columnId: string, updates: Omit<ICustomFieldData, 'id'>) {
+		const { data, error } = await supabase
+			.from('statuses')
+			.update({
+				...updates,
+				updated_at: new Date(),
+			})
+			.eq('id', columnId)
+			.select()
+			.single()
 
 		if (error) throw error
 		return data
 	},
 
 	async deleteColumn(columnId: string) {
-		const supabase = await getSupabase()
 		const { error } = await supabase.from('statuses').delete().eq('id', columnId)
 
 		if (error) throw error
-	},
-
-	async createColumn(projectId: string, data: Omit<ICustomFieldData, 'id'>) {
-		const supabase = await getSupabase()
-		const { data: column, error } = await supabase
-			.from('statuses')
-			.insert({
-				...data,
-				project_id: projectId,
-				limit: 5,
-				order: await this.getNextOrder(projectId),
-			})
-			.select()
-			.single()
-
-		if (error) throw error
-		return column
 	},
 
 	async getNextOrder(projectId: string) {
